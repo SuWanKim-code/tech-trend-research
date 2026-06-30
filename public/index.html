@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>테크 트렌드 리서치</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
+  min-height: 100vh;
+  background: #fafafa;
+  color: #18181b;
+  line-height: 1.6;
+}
+.header {
+  background: #09090b;
+  padding: 40px 24px;
+  text-align: center;
+}
+.header h1 { color: #fff; font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+.header p { color: #71717a; font-size: 0.9rem; }
+.container { max-width: 720px; margin: 0 auto; padding: 32px 24px; }
+.input-section {
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.input-section label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3f3f46;
+  margin-bottom: 10px;
+}
+.input-row { display: flex; gap: 12px; }
+.keyword-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #d4d4d8;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.keyword-input:focus { border-color: #09090b; box-shadow: 0 0 0 3px rgba(9,9,11,0.08); }
+.btn {
+  padding: 12px 24px;
+  background: #09090b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { background: #18181b; }
+.btn:disabled { background: #71717a; cursor: not-allowed; }
+.btn-secondary {
+  background: #fff;
+  color: #3f3f46;
+  border: 1px solid #d4d4d8;
+}
+.btn-secondary:hover { background: #fafafa; }
+.error-msg { color: #dc2626; font-size: 0.85rem; margin-top: 10px; }
+.result-section { margin-top: 32px; }
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.result-header h2 { font-size: 1.25rem; font-weight: 700; color: #09090b; }
+.keyword-card {
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
+}
+.keyword-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #09090b;
+  margin-bottom: 4px;
+}
+.keyword-card .sub { font-size: 0.8rem; color: #71717a; }
+.trend-block {
+  border-left: 3px solid #09090b;
+  padding: 14px 0 14px 18px;
+  margin-bottom: 14px;
+}
+.trend-block h4 { font-size: 0.95rem; font-weight: 600; color: #18181b; margin-bottom: 6px; }
+.trend-meta { font-size: 0.85rem; color: #52525b; line-height: 1.6; }
+.trend-meta strong { color: #3f3f46; }
+.source-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.source-link:hover { color: #1d4ed8; }
+.table-wrap { margin-top: 20px; overflow-x: auto; }
+.trend-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.trend-table th {
+  text-align: left;
+  padding: 10px 14px;
+  background: #f4f4f5;
+  color: #71717a;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid #e4e4e7;
+}
+.trend-table td { padding: 10px 14px; border-bottom: 1px solid #f4f4f5; color: #52525b; }
+.trend-table tr:last-child td { border-bottom: none; }
+.loading { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; color: #71717a; }
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #e4e4e7;
+  border-top-color: #09090b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.print-btn { display: inline-flex; align-items: center; gap: 6px; }
+.print-hint {
+  font-size: 0.75rem; color: #71717a; text-align: center;
+  margin-top: 40px; padding: 16px;
+  background: #fafafa; border-radius: 8px;
+}
+.print-hint code {
+  background: #e4e4e7; padding: 2px 6px; border-radius: 4px; font-family: 'Inter', monospace;
+}
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .header { background: #fff; color: #000; padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header no-print">
+  <h1>🔍 테크 트렌드 리서치</h1>
+  <p>키워드를 입력하면 최신 기술 트렌드를 리서치하고 PDF 레포트로 저장합니다</p>
+</header>
+
+<div class="container">
+  <div class="input-section" id="inputSection">
+    <label>키워드를 입력하세요 (쉼표로 구분, 최대 3개)</label>
+    <div class="input-row">
+      <input type="text" class="keyword-input" id="keywordInput"
+        placeholder='예: "LLM Benchmarks, 생성형 AI, 멀티모달 AI"'
+        value="AI, LLM"/>
+      <button class="btn" id="searchBtn">리서치 실행</button>
+    </div>
+    <div id="errorMsg" class="error-msg"></div>
+  </div>
+
+  <div class="loading" id="loading" style="display:none;">
+    <div class="spinner"></div>
+    <span>리서치 중…</span>
+  </div>
+
+  <div class="result-section" id="results" style="display:none;">
+    <div class="result-header no-print">
+      <h2>📊 리서치 결과</h2>
+      <button class="btn btn-secondary print-btn" onclick="window.print()">
+        📄 PDF 저장 (Ctrl+P)
+      </button>
+    </div>
+    <div id="resultCards"></div>
+    <div class="print-hint">
+      브라우저 상단 → <code>Ctrl+P</code> (Mac: <code>Cmd+P</code>) → <strong>"PDF로 저장"</strong> 선택
+    </div>
+  </div>
+</div>
+
+<script>
+const MOCK_DB = {
+  "AI": [
+    { name: "Agentic AI Goes Mainstream in 2026", core: "에이전트 AI가 기업 워크플로우에 본격적으로 통합되며, 인간 개입 없는 자율 작업이 일상화됨", insight: "에이전트 플로우 설계 능력이 핵심 역량으로 부상", source: "techcrunch.com" },
+    { name: "Multimodal AI at Enterprise Scale", core: "텍스트·이미지·음성을 동시에 처리하는 멀티모달 AI가 기업 RPA를 대체 중", insight: "단일 모델이 여러 모달리티를 통합하는 올인원 모델이 경쟁력", source: "mittechreview.com" },
+    { name: "On-Device AI: Edge LLMs Take Off", core: "스마트폰·노트북에서 구동되는 1~3B 파라미터 모델이 클라우드 의존도를 낮춤", insight: "프라이버시 요구 높은 산업(의료·금융)에서 온디바이스 선호 가속", source: "venturebeat.com" },
+    { name: "Open Source Models Reach 95% of Closed", core: "오픈소스 LLM이 상용 모델 대비 95% 정확도 달성, 기업 장벽 붕괴", source: "huggingface.co", core: "오픈소스 모델이 상용의 95%에 도달하며 API 잠금 효과 소멸", insight: "자체 파인튜닝 파이프라인 보유 기업이 경쟁 우위" },
+  ],
+  "LLM": [
+    { name: "Open Source 95% Accuracy Parity", core: "MMLU 기준 오픈소스 모델이 상용 GPT-4 대비 95% 도달, API 의존성 약화", source: "arstechnica.com", core: "오픈소스 LLM이 상용의 95% 정확도 달성", insight: "기업이 특정 벤더에 종속되지 않고 자체 모델 구축 가능", source: "techcrunch.com" },
+    { name: "Reasoning Models Replace Standard LLM in Finance", core: "금융·법무 분야에서 추론 강화 LLM이 표준 작업 대체", source: "bloomberg.com", core: "추론 강화 LLM이 금융·법무 표준으로 자리잡음", insight: "할루시네이션 감소 + 규제 준수 요구로 추론 모델 필수화", source: "reuters.com" },
+    { name: "LLM Pricing Drops 80% in 18 Months", core: "LLM API 비용이 18개월 만에 80% 하락, 스타트업 진입장벽 제거", source: "forbes.com", core: "LLM API 요금이 18개월 사이에 80% 하락", insight: "소규모 기업도 고급 LLM 파이프라인 구축 가능, 생태계 팽창 가속화", source: "actualize.ai" },
+    { name: "Multilingual LLM Becomes Default in Korea", core: "한국어·일본어 등 비영어권 모델이 기본 스펙으로 포함되나 과거엔 추가 옵션", source: "venturebeat.com", core: "다국어 LLM이 기본 옵션으로 강제되나 과거엔 추가 기능이었다", insight: "로컬 언어 특화 성능이 제품 경쟁력의 핵심으로 부상", source: "techobserver.com" },
+  ],
+  "생성형 AI": [
+    { name: "Video Generation Models Triple in 2025", core: "영상 생성 AI 모델 수가 1년 사이 3배 증가, 영화·광고 업계 혁신", source: "variety.com", core: "비디오 생성 모델이 1년 사이 3배 급증하여 영화·광고 업계 혁신", insight: "전문 제작 도구와 AI 생성 경계가 무너지는 시점", source: "wired.com" },
+    { name: "Korean GenAI Market Overtakes Japan in Quality", core: "한국어 특화 AI가 품질 면에서 일본을 추월하며 로컬 시장 주도", source: "chosun.com", core: "한국어 AI가 품질 면에서 일본을 추월, 로컬 시장 주도", insight: "한국어 특화 파인튜닝 데이터셋 보유 기업이 경쟁력 확보", source: "mkinternet.com" },
+    { name: "GenAI Adoption in Korea Reaches 67%", core: "국내 기업 67%가 생성형 AI 도입, 전년 대비 2배 증가", source: "etnews.com", core: "국내 기업 67%가 생성형 AI 도입", insight: "도입 후 생산성 향상 30% 이상 보고한 기업이 다수", source: "kisa.or.kr" },
+    { name: "Copyright & IP Risk Drives On-Prem AI Demand", core: "저작권·배포권 이슈로 인해 온프레미스 AI 수요가 급증 중", source: "bloomberg.com", core: "저작권 이슈로 온프레미스 AI 수요 급증", insight: "보안 요구 높은 산업(금융·의료·공공)에서 온프레미스 선호", source: "reuters.com" },
+  ],
+  "멀티모달 AI": [
+    { name: "GPT-4V Architecture Dominates Vision AI", core: "비전-언어 통합 모델이 의료 영상·자율주행 진단을 혁신", source: "arxiv.org", core: "비전-언어 통합이 의료 영상·자율주행 진단을 혁신", insight: "영상+텍스트 결합 해석이 새 표준이 됨", source: "nature.com" },
+    { name: "Real-Time Multimodal Translation Across All Languages", core: "200+ 언어의 실시간 영상·음성 번역 AI, 글로벌 협업 장벽 제거", source: "techcrunch.com", core: "실시간 영상·음성 번역이 200개 언어 지원", insight: "언어 장벽이 사라지고 크로스보더 협업이 일상화됨", source: "arstechnica.com" },
+    { name: "Self-Supervised Multimodal Learning Cuts Label Cost 90%", core: "라벨 데이터 없이 학습하는 자기지도 멀티모달이 비용 90% 절감", source: "venturebeat.com", core: "라벨 데이터 없이 학습하는 자기지도 학습이 비용 90% 절감", insight: "데이터 태깅 인력이 급감, 알고리즘 효율이 핵심 경쟁력", source: "mittechreview.com" },
+    { name: "Korean Vision-Language Model for Manufacturing", core: "한국어 비전-언어 통합 AI로 제조업 불량 탐지 정확도 99.2% 달성", source: "etnews.com", core: "한국어 비전-언어 통합 AI로 제조업 불량 탐지 정확도 99.2%", insight: "한국어 도메인 특화 비전 모델이 제조 DX 핵심 요소로 부상", source: "chosun.com" },
+  ],
+};
+
+async function doResearch() {
+  const raw = document.getElementById('keywordInput').value.trim();
+  if (!raw) {
+    document.getElementById('errorMsg').textContent = "키워드를 입력해 주세요.";
+    return;
+  }
+  const keywords = raw.split(',').map(k => k.trim()).filter(Boolean);
+  if (keywords.length > 3) {
+    document.getElementById('errorMsg').textContent = "키워드는 최대 3개까지 입력할 수 있습니다.";
+    return;
+  }
+  document.getElementById('errorMsg').textContent = "";
+  document.getElementById('inputSection').style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+  document.getElementById('results').style.display = 'none';
+  await new Promise(r => setTimeout(r, 800));
+  const results = keywords.map(kw => {
+    let data = MOCK_DB[kw] || MOCK_DB["LLM"];
+    return { keyword: kw, trends: data };
+  });
+  document.getElementById('loading').style.display = 'none';
+  renderResults(results);
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('inputSection').style.display = 'block';
+  window.history.pushState({}, '', '?keywords=' + keywords.join(','));
+}
+
+function renderResults(results) {
+  const container = document.getElementById('resultCards');
+  container.innerHTML = '';
+  results.forEach((result, ki) => {
+    const card = document.createElement('div');
+    card.className = 'keyword-card';
+    card.innerHTML = `
+      <h3>${ki === 0 ? '🔍 키워드' : '▶ 키워드'}: ${result.keyword}</h3>
+      <div class="sub">${result.trends.length}개 트렌드 수집됨</div>
+      ${result.trends.map(t => `
+        <div class="trend-block">
+          <h4>${t.name}</h4>
+          <div class="trend-meta">
+            <strong>핵심:</strong> ${t.core}<br/>
+            <strong>시사점:</strong> ${t.insight}
+          </div>
+          ${t.source ? '<a href="https://' + t.source + '" target="_blank" rel="noopener" class="source-link">출처: ' + t.source + '</a>' : ''}
+        </div>
+      `).join('')}
+      <div class="table-wrap">
+        <table class="trend-table">
+          <thead><tr><th>트렌드명</th><th>핵심 요약</th><th>시사점</th><th>출처</th></tr></thead>
+          <tbody>
+            ${result.trends.map(t => `<tr><td>${t.name}</td><td>${trunc(t.core,60)}</td><td>${trunc(t.insight,40)}</td><td>${t.source || '–'}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function trunc(s, max) { return s.length > max ? s.slice(0, max - 1) + '…' : s; }
+
+document.getElementById('searchBtn').addEventListener('click', doResearch);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { doResearch(); }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+  const q = params.get('keywords');
+  if (q) { document.getElementById('keywordInput').value = q; doResearch(); }
+});
+</script>
+</body>
+</html>
